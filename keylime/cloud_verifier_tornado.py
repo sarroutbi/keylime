@@ -240,7 +240,7 @@ def store_attestation_state(agentAttestState: AgentAttestState) -> None:
         agent_id = agentAttestState.agent_id
         try:
             with session_context() as session:
-                update_agent = session.query(VerfierMain).get(agentAttestState.get_agent_id())
+                update_agent = session.get(VerfierMain, agentAttestState.get_agent_id())
                 assert update_agent
                 update_agent.boottime = agentAttestState.get_boottime()
                 update_agent.next_ima_ml_entry = agentAttestState.get_next_ima_ml_entry()
@@ -549,7 +549,7 @@ class AgentsHandler(BaseHandler):
                 logger.info("DELETE returning 200 response for agent id: %s", agent_id)
             else:
                 try:
-                    update_agent = session.query(VerfierMain).get(agent_id)
+                    update_agent = session.get(VerfierMain, agent_id)
                     assert update_agent
                     update_agent.operational_state = states.TERMINATED
                     session.add(update_agent)
